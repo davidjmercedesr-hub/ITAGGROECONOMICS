@@ -1,0 +1,2 @@
+import type {Observation} from './domain';
+export const localAssistant={async ask(input:{message:string;observation?:Observation}){return ['Kontext erkannt.','Prüfe zuerst Ort, Zeitpunkt, betroffene Fläche und ob das Muster wiederholt auftritt.',input.message.toLowerCase().includes('aufgabe')?'Daraus kann eine strukturierte Aufgabe mit Feld und Fälligkeit entstehen.':'Daraus kann eine strukturierte Beobachtung entstehen.','Agronomische Einschätzungen bleiben als Hinweise mit Unsicherheit gekennzeichnet.'].join(' ')}};
