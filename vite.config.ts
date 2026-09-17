@@ -1,3 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-export default defineConfig({ base: './', plugins: [react()], build: { outDir: 'dist' } });
+
+const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
+
+export default defineConfig({
+  base: isGitHubPages ? '/KlarblattVisite/' : './',
+  plugins: [react()],
+  build: { outDir: 'dist' }
+});
