@@ -1,0 +1,88 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163b32"><title>KlarblattVisite</title><style>:root{--g:#dfeee5;--d:#163b32;--m:#64716c;--l:#d5dfda;--b:#a81f55;--o:#ff922e}*{box-sizing:border-box}body{margin:0;background:linear-gradient(#f4faf7,#fff);font:16px system-ui;color:#18201d}main{max-width:760px;margin:auto;padding:24px 16px}.hero{display:flex;gap:18px;align-items:center;margin-bottom:20px}.mark{width:96px;height:96px;flex:none;border-radius:26px;background:#202221;display:grid;place-items:center}.mark svg{width:82px}.ey{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--b);font-weight:800}h1{font-size:44px;line-height:1;margin:5px 0;color:var(--d);letter-spacing:-.04em}.sub{color:var(--m)}.panel{border:1px solid var(--l);border-radius:25px;padding:20px;background:#f8fbf9;box-shadow:0 10px 30px #163b3210}.row,.aihead,.foot{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}label,.ait{font-weight:800;color:var(--d)}select,input{min-height:46px;border:1px solid var(--l);border-radius:14px;background:white;padding:0 13px;font-size:16px}select{min-width:190px}.ai{margin:12px 0 18px;padding:15px;border-radius:18px;background:var(--g)}.badge,.stat{font-size:12px;font-weight:800;border-radius:999px;padding:6px 10px;background:white;color:var(--d)}.desc{font-size:13px;color:var(--m);margin-top:7px}.compose{display:grid;grid-template-columns:1fr auto;gap:9px}button{border:0;border-radius:14px;min-height:46px;padding:0 17px;font-weight:800}.add{background:var(--d);color:white}.secondary{background:var(--g);color:var(--d)}.stats{display:flex;gap:8px;margin:17px 0 10px}ul{padding:0;margin:0;list-style:none;display:grid;gap:8px}li{display:grid;grid-template-columns:25px 1fr auto;gap:9px;align-items:center;background:white;border:1px solid var(--l);border-radius:15px;padding:10px}li.done .txt{text-decoration:line-through;color:#7b8782}.rm{background:transparent;color:var(--b);font-size:20px}.empty{text-align:center;color:var(--m);padding:25px}.foot{margin-top:13px;font-size:12px;color:var(--m)}@media(max-width:520px){main{padding:14px 12px}.hero{gap:12px}.mark{width:74px;height:74px}.mark svg{width:64px}h1{font-size:32px}.compose{grid-template-columns:1fr}}
+
+.chat{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.chat-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.chat-title{font-weight:850;color:var(--deep)}
+.chat-status{font-size:12px;font-weight:800;padding:6px 9px;border-radius:999px;background:var(--green);color:var(--deep)}
+.chat-log{min-height:120px;max-height:310px;overflow:auto;display:grid;gap:9px;padding:4px 0 10px}
+.msg{max-width:88%;padding:10px 12px;border-radius:15px;line-height:1.45;font-size:14px;white-space:pre-wrap}
+.msg.user{justify-self:end;background:var(--deep);color:#fff;border-bottom-right-radius:5px}
+.msg.assistant{justify-self:start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
+.chat-compose{display:grid;grid-template-columns:1fr auto;gap:10px}
+.chat-compose textarea{width:100%;min-height:48px;max-height:130px;resize:vertical;border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px 14px;font:inherit;font-size:15px;outline:none}
+.chat-compose textarea:focus{border-color:var(--berry);box-shadow:0 0 0 3px rgba(168,31,85,.11)}
+.chat-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4}
+@media(max-width:520px){.chat-compose{grid-template-columns:1fr}.msg{max-width:94%}}
+
+
+/* ChatGPT-like local chat window */
+.chat-shell{margin-top:20px;border:1px solid var(--line);border-radius:24px;background:#fff;overflow:hidden;box-shadow:0 12px 38px rgba(22,59,50,.08)}
+.chat-window{height:430px;overflow:auto;padding:20px 18px 26px;background:linear-gradient(180deg,#fbfdfc,#fff)}
+.chat-welcome{text-align:center;max-width:520px;margin:72px auto 20px}
+.chat-welcome-icon{width:44px;height:44px;margin:0 auto 14px;border-radius:14px;background:var(--deep);display:grid;place-items:center;color:#fff;font-weight:900}
+.chat-welcome h2{font-size:24px;letter-spacing:-.03em;color:var(--deep);margin:0 0 7px}
+.chat-welcome p{color:var(--muted);margin:0;line-height:1.5}
+.chat-msg{display:flex;gap:11px;max-width:720px;margin:0 auto 20px;align-items:flex-start}
+.chat-msg.user{justify-content:flex-end}
+.chat-avatar{flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:var(--deep);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:900}
+.chat-msg.user .chat-avatar{background:var(--berry);order:2}
+.chat-bubble{max-width:calc(100% - 42px);padding:11px 14px;border-radius:17px;line-height:1.5;font-size:15px;white-space:pre-wrap}
+.chat-msg.assistant .chat-bubble{background:#f1f6f3;border:1px solid #e0e9e4}
+.chat-msg.user .chat-bubble{background:var(--deep);color:#fff}
+.chat-compose-wrap{padding:12px 14px 14px;border-top:1px solid var(--line);background:#fff}
+.chat-compose-new{max-width:720px;margin:auto;position:relative}
+.chat-compose-new textarea{width:100%;min-height:58px;max-height:150px;resize:none;border:1px solid #cfdad5;border-radius:18px;background:#fff;padding:16px 54px 16px 16px;font:inherit;font-size:15px;outline:none;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.chat-compose-new textarea:focus{border-color:var(--deep);box-shadow:0 0 0 3px rgba(22,59,50,.08)}
+.chat-send{position:absolute;right:8px;bottom:8px;width:40px;height:40px;min-height:40px;padding:0;border-radius:12px;background:var(--deep);color:#fff;font-size:18px}
+.chat-tools{max-width:720px;margin:8px auto 0;display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:11px}
+.chat-tools .runtime{font-weight:750}
+.chat-stop{display:none;background:transparent;color:var(--berry);padding:4px 8px;min-height:28px}
+
+</style><main><section class="hero"><div class="mark"><svg viewBox="0 0 120 120"><path d="M24 93C19 74 21 53 31 28M39 105C37 78 47 50 72 24M50 33C70 20 90 25 91 39C92 55 78 65 61 62C76 74 91 86 103 84M45 76C55 56 72 43 93 35" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" stroke="#a81f55"/><path d="M39 105C37 78 47 50 72 24M45 76C55 56 72 43 93 35" fill="none" stroke-linecap="round" stroke-width="8" stroke="#ff922e"/></svg></div><div><div class="ey">Strukturierte Visitenvorbereitung</div><h1>KlarblattVisite</h1><div class="sub">Klar durch die Visite. Punkte sammeln, ordnen und Schritt für Schritt abarbeiten.</div></div></section><section class="panel"><div class="row"><label>Sprache / Language</label><select id="lang"><option>Deutsch</option><option>English</option><option>Français</option><option>Español</option><option>Italiano</option><option>Türkçe</option></select></div><div class="ai"><div class="aihead"><span class="ait">Lokales KI-Modell</span><span class="badge">● Lokal / optional</span></div><select id="model" style="width:100%;margin-top:10px"><option>Kein KI-Modell — nur Checkliste</option><option>Ollama · lokal</option><option>llama.cpp · lokal</option><option>MLX · lokal · Apple Silicon</option><option>Eigenes lokales Modell</option></select><div class="desc" id="desc">Kein Modell aktiv. Die App funktioniert vollständig als lokale Checkliste.</div></div><form id="form"><div class="compose"><input id="point" placeholder="Punkt für die Visite hinzufügen …" autocomplete="off"><button class="add">+ Hinzufügen</button></div></form><div class="stats"><span class="stat" id="count">0 Punkte</span><span class="stat" id="done">0 erledigt</span></div><ul id="list"></ul><div class="empty" id="empty">Noch keine Punkte. Füge den ersten Punkt für die Visite hinzu.</div><div class="foot"><span>Lokaler Prototyp · keine medizinische Entscheidungsunterstützung</span><button class="secondary" id="clear" type="button">Erledigte löschen</button></div></section></main><script>const I=[],q=s=>document.querySelector(s),L=q('#list');function render(){L.innerHTML='';I.forEach((x,i)=>{let li=document.createElement('li');if(x.d)li.className='done';li.innerHTML='<input type="checkbox"><span class="txt"></span><button class="rm">×</button>';li.querySelector('.txt').textContent=x.t;li.querySelector('input').checked=x.d;li.querySelector('input').onchange=e=>{x.d=e.target.checked;render()};li.querySelector('.rm').onclick=()=>{I.splice(i,1);render()};L.append(li)});q('#count').textContent=I.length+' Punkte';q('#done').textContent=I.filter(x=>x.d).length+' erledigt';q('#empty').hidden=I.length>0}q('#form').onsubmit=e=>{e.preventDefault();let v=q('#point').value.trim();if(v){I.push({t:v,d:false});q('#point').value='';render()}};q('#clear').onclick=()=>{for(let i=I.length-1;i>=0;i--)if(I[i].d)I.splice(i,1);render()};q('#model').onchange=e=>{let m=e.target.value;q('#desc').textContent=m.startsWith('Kein')?'Kein Modell aktiv. Die App funktioniert vollständig als lokale Checkliste.':m+' ist als lokaler Adapter vorbereitet. Diese Demo führt noch keine LLM-Inferenz aus.'};render()
+
+
+const chatLog=$('#chatLog'),chatForm=$('#chatForm'),chatInput=$('#chatInput'),chatRuntime=$('#chatRuntime');
+const chatHistory=[];
+function addChat(text,who){
+  const welcome=$('#chatWelcome'); if(welcome) welcome.remove();
+  const row=document.createElement('div'); row.className='chat-msg '+who;
+  const avatar=document.createElement('div'); avatar.className='chat-avatar'; avatar.textContent=who==='user'?'Du':'✦';
+  const bubble=document.createElement('div'); bubble.className='chat-bubble'; bubble.textContent=text;
+  row.append(avatar,bubble); chatLog.appendChild(row); chatLog.scrollTop=chatLog.scrollHeight;
+}
+function updateChatRuntime(){
+  const labels={none:'Kein lokales Modell ausgewählt',ollama:'Ollama · lokal',llamacpp:'llama.cpp · lokal',mlx:'MLX · lokal · Apple Silicon',custom:'Eigenes lokales Modell'};
+  chatRuntime.textContent=labels[model.value]||'Lokale Runtime';
+}
+model.addEventListener('change',updateChatRuntime); updateChatRuntime();
+
+chatInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatForm.requestSubmit();}
+});
+chatInput.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=Math.min(chatInput.scrollHeight,150)+'px';});
+
+async function localReply(text){
+  const base=endpoint.value.trim().replace(/\/+$/,'');
+  chatHistory.push({role:'user',content:text});
+  if(model.value==='ollama'){
+    const r=await fetch(base+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'llama3.2',messages:chatHistory,stream:false})});
+    if(!r.ok) throw new Error('Ollama HTTP '+r.status);
+    const d=await r.json(); return d.message?.content||'Keine Antwort erhalten.';
+  }
+  const r=await fetch(base+'/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'local-model',messages:chatHistory,temperature:.2,stream:false})});
+  if(!r.ok) throw new Error('Lokale Runtime HTTP '+r.status);
+  const d=await r.json(); return d.choices?.[0]?.message?.content||'Keine Antwort erhalten.';
+}
+chatForm.addEventListener('submit',async e=>{
+  e.preventDefault(); const text=chatInput.value.trim(); if(!text)return;
+  addChat(text,'user'); chatInput.value=''; chatInput.style.height='auto';
+  if(model.value==='none'){addChat('Bitte oben zuerst ein lokales Modell auswählen.','assistant');return;}
+  const thinking='Lokales Modell denkt …'; addChat(thinking,'assistant');
+  const bubble=chatLog.lastElementChild.querySelector('.chat-bubble');
+  try{const ans=await localReply(text); bubble.textContent=ans; chatHistory.push({role:'assistant',content:ans});}
+  catch(err){bubble.textContent='Keine Verbindung zur lokalen Runtime. Prüfe Runtime-Adresse, Modell und CORS.\\n\\n'+err.message;}
+});
+
+</script></html>
