@@ -1,0 +1,7 @@
+import type {FarmTask,Observation} from './domain';
+const DB_NAME='klarblattfarm',DB_VERSION=2,OBS='observations',TASKS='tasks';
+function openDb():Promise<IDBDatabase>{return new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,DB_VERSION);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(OBS))db.createObjectStore(OBS,{keyPath:'id'});if(!db.objectStoreNames.contains(TASKS))db.createObjectStore(TASKS,{keyPath:'id'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+export async function listObservations():Promise<Observation[]>{const db=await openDb();return new Promise((resolve,reject)=>{const r=db.transaction(OBS,'readonly').objectStore(OBS).getAll();r.onsuccess=()=>resolve((r.result??[]).sort((a,b)=>b.timestamp.localeCompare(a.timestamp)));r.onerror=()=>reject(r.error)})}
+export async function saveObservation(o:Observation){const db=await openDb();db.transaction(OBS,'readwrite').objectStore(OBS).put(o)}
+export async function listTasks():Promise<FarmTask[]>{const db=await openDb();return new Promise((resolve,reject)=>{const r=db.transaction(TASKS,'readonly').objectStore(TASKS).getAll();r.onsuccess=()=>resolve(r.result??[]);r.onerror=()=>reject(r.error)})}
+export async function saveTask(t:FarmTask){const db=await openDb();db.transaction(TASKS,'readwrite').objectStore(TASKS).put(t)}

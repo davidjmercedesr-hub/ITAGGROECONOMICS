@@ -1,0 +1,2 @@
+export type Observation={id:string;farmId:string;fieldId:string;field:string;text:string;timestamp:string;status:'new'|'reviewed';media:Array<{type:'image'|'audio';name:string;blob?:Blob}>;sensorReadings:Array<{key:string;value:number;unit:string}>;weatherContext:null|{temperatureC?:number;rainMm?:number};aiFindings:null|{summary:string;confidence?:number}};
+export type FarmTask={id:string;observationId?:string;title:string;field:string;due:string;status:'open'|'done'};
