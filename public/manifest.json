@@ -1,0 +1,10 @@
+{
+  "name": "KlarblattFarm",
+  "short_name": "KlarblattFarm",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f1e8",
+  "theme_color": "#183b2f",
+  "lang": "de",
+  "description": "Offline-first FarmVisite für Beobachtungen und Aufgaben."
+}
