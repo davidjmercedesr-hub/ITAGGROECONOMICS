@@ -3,14 +3,14 @@ import type {FarmTask,Observation} from './domain';
 import {localAssistant} from './assistant';
 import {listObservations,listTasks,saveObservation,saveTask} from './storage';
 import {recordShortAudio} from './media';
-
-const fields=['Feld Nord 01','Feld Süd 02','Gewächshaus'];
+import {demoFarm,demoFields} from './farm';
 
 export function App(){
   const[observations,setObservations]=useState<Observation[]>([]);
   const[tasks,setTasks]=useState<FarmTask[]>([]);
   const[text,setText]=useState('');
-  const[field,setField]=useState(fields[0]);
+  const[fieldId,setFieldId]=useState(demoFields[0].id);
+  const field=demoFields.find(f=>f.id===fieldId)??demoFields[0];
   const[selectedId,setSelectedId]=useState<string|null>(null);
   const[chatInput,setChatInput]=useState('');
   const[chat,setChat]=useState(['Hallo. Ich arbeite offline-first und zeige bei agronomischen Hinweisen Unsicherheit statt einer definitiven Diagnose.']);
@@ -24,7 +24,7 @@ export function App(){
 
   async function addObservation(media:Observation['media']=[]){
     const value=text.trim(); if(!value&&!media.length)return;
-    const o:Observation={id:crypto.randomUUID(),farmId:'demo-farm',fieldId:field,field,text:value||'Medienbeobachtung',timestamp:new Date().toISOString(),status:'new',media,sensorReadings:[],weatherContext:null,aiFindings:null};
+    const o:Observation={id:crypto.randomUUID(),farmId:demoFarm.id,fieldId:field.id,field:field.name,text:value||'Medienbeobachtung',timestamp:new Date().toISOString(),status:'new',media,sensorReadings:[],weatherContext:null,aiFindings:null};
     await saveObservation(o); setObservations(v=>[o,...v]); setSelectedId(o.id); setText(''); setMessage('Beobachtung lokal gespeichert.');
   }
   async function createTask(o:Observation){
@@ -48,7 +48,7 @@ export function App(){
   }
   function exportJson(){
     const safeObservations=observations.map(({media,...o})=>({...o,media:media.map(({type,name})=>({type,name}))}));
-    const blob=new Blob([JSON.stringify({farm:'Musterbetrieb',fields,observations:safeObservations,tasks,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});
+    const blob=new Blob([JSON.stringify({farm:demoFarm,fields:demoFields,observations:safeObservations,tasks,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});
     const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='klarblattfarm-export.json';a.click();URL.revokeObjectURL(u);
   }
 
@@ -64,9 +64,9 @@ export function App(){
           <div className="actions"><button className="btn primary" onClick={()=>void createTask(selected)}>→ Aufgabe anlegen</button><button className="btn secondary" onClick={()=>{setObservations(v=>v.map(o=>o.id===selected.id?{...o,status:'reviewed'}:o));void saveObservation({...selected,status:'reviewed'});setMessage('Beobachtung als geprüft markiert.')}}>Als geprüft markieren</button></div>
           <div className="card inner"><div className="title">AI-Befund</div><p className="muted">{selected.aiFindings?.summary??'Noch keine KI-Auswertung. Für eine belastbare Assistenz zuerst Beobachtung, Bild, Sensor- und Wetterkontext sammeln.'}</p></div>
         </div>:<div className="card">
-          <div className="head"><div><div className="title">Heute auf dem Hof</div><div className="muted">Musterbetrieb · Feld Nord 01</div></div><button className="btn primary" onClick={()=>document.getElementById('obText')?.focus()}>＋ Rundgang starten</button></div>
+          <div className="head"><div><div className="title">Heute auf dem Hof</div><div className="muted">{demoFarm.name} · {field.name}</div></div><button className="btn primary" onClick={()=>document.getElementById('obText')?.focus()}>＋ Rundgang starten</button></div>
           <div className="stats"><div className="stat"><b>{observations.length}</b><span>Beobachtungen</span></div><div className="stat"><b>{tasks.filter(t=>t.status==='open').length}</b><span>offene Aufgaben</span></div><div className="stat"><b>Offline</b><span>Datenspeicherung</span></div></div>
-          <form className="form" onSubmit={e=>{e.preventDefault();void addObservation()}}><input id="obText" value={text} onChange={e=>setText(e.target.value)} placeholder="Was fällt dir auf? z. B. feuchte Stelle, Blattbild …"/><select value={field} onChange={e=>setField(e.target.value)}>{fields.map(f=><option key={f}>{f}</option>)}</select><button className="btn primary">Speichern</button></form>
+          <form className="form" onSubmit={e=>{e.preventDefault();void addObservation()}}><input id="obText" value={text} onChange={e=>setText(e.target.value)} placeholder="Was fällt dir auf? z. B. feuchte Stelle, Blattbild …"/><select value={fieldId} onChange={e=>setFieldId(e.target.value)}>{demoFields.map(f=><option key={f.id} value={f.id}>{f.name}{f.crop?' · '+f.crop:''}</option>)}</select><button className="btn primary">Speichern</button></form>
           <div className="media-actions"><button className="btn secondary" onClick={()=>photoRef.current?.click()}>📷 Foto hinzufügen</button><button className="btn secondary" onClick={()=>void startRecording()} disabled={recording}>{recording?'● Aufnahme …':'🎙 Sprache aufnehmen'}</button><input ref={photoRef} hidden type="file" accept="image/*" capture="environment" onChange={e=>{const f=e.target.files?.[0];if(f)void addObservation([{type:'image',name:f.name,blob:f}]);e.currentTarget.value='' }}/></div>
           <ul>{observations.slice(0,8).map(o=><li className="obs" key={o.id}><button className="obs-main" onClick={()=>setSelectedId(o.id)}><div className="dot">👀</div><div><b>{o.text}</b><div className="muted">{o.field} · {new Date(o.timestamp).toLocaleString('de-DE')}</div><span className="tag">{o.media.length?o.media.length+' Medium':'Beobachtung'}</span></div></button><button className="btn ghost" onClick={()=>void createTask(o)}>→ Aufgabe</button></li>)}{!observations.length&&<li className="empty">Noch keine Beobachtung. Starte den Rundgang.</li>}</ul>
         </div>}
