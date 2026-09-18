@@ -1,6 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import type {FarmTask,Observation} from './domain';
 import {localAssistant} from './assistant';
+import {buildAIContextPack} from './ai/context-pack';
 import {listObservations,listTasks,saveObservation,saveTask} from './storage';
 import {recordShortAudio} from './media';
 import {demoFarm,demoFields} from './farm';
@@ -19,8 +20,8 @@ export function App(){
   const photoRef=useRef<HTMLInputElement>(null);
 
   useEffect(()=>{Promise.all([listObservations(),listTasks()]).then(([o,t])=>{setObservations(o);setTasks(t)}).catch(console.warn)},[]);
-
   const selected=observations.find(o=>o.id===selectedId)??null;
+  const assistantObservation=selected??observations[0]??null;
 
   async function addObservation(media:Observation['media']=[]){
     const value=text.trim(); if(!value&&!media.length)return;
@@ -39,7 +40,10 @@ export function App(){
   async function sendChat(){
     const v=chatInput.trim();if(!v)return;
     setChat(vs=>[...vs,'Du: '+v,'Assistent: wird verarbeitet …']);setChatInput('');
-    const a=await localAssistant.ask({message:v,observation:selected??observations[0]});
+    const contextPack=assistantObservation
+      ? buildAIContextPack({farm:demoFarm,field:demoFields.find(f=>f.id===assistantObservation.fieldId)??field,observation:assistantObservation,history:observations,tasks})
+      : undefined;
+    const a=await localAssistant.ask({message:v,observation:assistantObservation??undefined,contextPack});
     setChat(vs=>[...vs.slice(0,-1),'Assistent: '+a]);
   }
   async function startRecording(){
