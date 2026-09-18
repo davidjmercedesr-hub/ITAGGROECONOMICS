@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "node server/server.mjs",
+    "start": "npm run build && npm run server",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "cap:sync": "npm run build && cap sync",
