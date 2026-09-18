@@ -1,0 +1,50 @@
+name: Build KlarblattFarm iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Sync Capacitor iOS project
+        run: npx cap sync ios
+
+      - name: Verify iOS project
+        run: test -d ios/App && test -f ios/App/App.xcodeproj/project.pbxproj
+
+      - name: Archive unsigned iOS project
+        run: |
+          mkdir -p artifacts
+          tar -czf artifacts/KlarblattFarm-ios-project.tar.gz ios
+          cp capacitor.config.ts artifacts/
+          cp package.json artifacts/
+
+      - name: Upload iOS project
+        uses: actions/upload-artifact@v4
+        with:
+          name: KlarblattFarm-iOS-project
+          path: artifacts/
+          retention-days: 14
